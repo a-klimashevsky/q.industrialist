@@ -46,10 +46,11 @@ from __init__ import __version__
 #  * <number> : значение type_id, поиск которого осуществляется (солнечная система, или топляк)
 #               при type_id > 0 поиск осуществляется вверх по дереву
 #               при type_id < 0 поиск осуществляется вниз по дереву
+from eve.domain._assets_service_impl import AssetsServiceImpl
 from eve.esi import StructureData
 from eve.domain import Asset, MarketPrice
-from eve.gateways import GetCorpAssetsGateway, GetInventoryLocationGateway, GetMarketPricesGateway, GetTypeInfoGateway, \
-    GetMarketGroupsGateway, GetCorpAssetsNamesGateway, GetForeignStructuresGateway, GetInventoryLocationNamesGateway
+from eve.gateways import CorpAssetsGateway, InventoryLocationGateway, GetMarketPricesGateway, GetTypeInfoGateway, \
+    GetMarketGroupsGateway, GetCorpAssetsNamesGateway, ForeignStructuresGateway, GetInventoryLocationNamesGateway
 from eve.domain import get_assets_tree
 
 #@profile
@@ -96,18 +97,23 @@ def main():
     type_info_gateway = GetTypeInfoGateway(cache_dir=cache_dir)
     sde_type_ids = type_info_gateway.type_info()
 
-    inventory_location_gateway = GetInventoryLocationGateway(cache_dir = cache_dir)
+    inventory_location_gateway = InventoryLocationGateway(cache_dir = cache_dir)
+    # Requires role(s): Director
+    corp_assets_gateway = CorpAssetsGateway(eve_interface=interface, corporation_id=corporation_id)
+    # Поиск тех станций, которые не принадлежат корпорации (на них имеется офис, но самой станции в ассетах нет)
+    foreign_structures_gateway = ForeignStructuresGateway(interface)
+
+    assets_service = AssetsServiceImpl(
+        corporation_name=corporation_name,
+        corp_assets_gateway = corp_assets_gateway,
+        foreign_structures_gateway=foreign_structures_gateway,
+        inventory_locations_gateway=inventory_location_gateway
+    )
+
     sde_inv_items = inventory_location_gateway.get_inventory_locations()
 
     market_groups_gateway = GetMarketGroupsGateway(cache_dir=cache_dir)
     sde_market_groups = market_groups_gateway.market_groups()
-
-    # Requires role(s): Director
-    corp_assets_gateway = GetCorpAssetsGateway(eve_interface=interface, corporation_id=corporation_id)
-    corp_assets_data = corp_assets_gateway.assets()
-
-    print("\n'{}' corporation has {} assets".format(corporation_name, len(corp_assets_data)))
-    sys.stdout.flush()
 
     # Получение названий контейнеров, станций, и т.п. - всё что переименовывается ingame
     corp_assets_names_gateway = GetCorpAssetsNamesGateway(
@@ -117,13 +123,6 @@ def main():
     corp_ass_names_data = corp_assets_names_gateway.asets_name(corp_assets_data)
     print("\n'{}' corporation has {} custom asset's names".format(corporation_name, len(corp_ass_names_data)))
     sys.stdout.flush()
-
-    # Поиск тех станций, которые не принадлежат корпорации (на них имеется офис, но самой станции в ассетах нет)
-    foreign_structures_gateway = GetForeignStructuresGateway(interface)
-    foreign_structures_data = foreign_structures_gateway.structures(
-        corp_assets_data= corp_assets_data,
-        corporation_name= corporation_name
-    )
 
     # Public information about market prices
     market_prices_gateway = GetMarketPricesGateway(eve_interface = interface)
@@ -142,12 +141,8 @@ def main():
     # элементов, в виде:
     # { location1: {items:[item1,item2,...],type_id,location_id},
     #   location2: {items:[item3],type_id} }
-    corp_assets_tree = get_assets_tree(
-        corp_assets_data,
-        foreign_structures_data,
-        sde_inv_items,
-        virtual_hierarchy_by_corpsag=True
-    )
+    corp_assets_tree = assets_service.assets_tree()
+
     eve_esi_tools.dump_debug_into_file(cache_dir, "corp_assets_tree", corp_assets_tree)
 
     # Построение дерева asset-ов:

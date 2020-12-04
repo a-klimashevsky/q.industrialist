@@ -1,0 +1,1 @@
+from eve.viewmodels._asset_tree_item import AssetTreeItemViewModel

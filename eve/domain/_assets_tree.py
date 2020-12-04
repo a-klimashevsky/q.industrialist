@@ -5,6 +5,8 @@ from eve.domain import Asset, TypeIds
 from eve.esi.structure_data import StructureData
 from eve.domain import InventoryLocation
 
+class AssetsTree:
+    pass
 
 @dataclass
 class AssetTreeItem:

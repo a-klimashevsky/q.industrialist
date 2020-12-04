@@ -4,7 +4,8 @@ from eve.domain import Asset
 from eve_esi_interface import EveOnlineInterface
 
 
-class GetCorpAssetsGateway:
+#TODO (a.klimashevsky): extract implementation
+class CorpAssetsGateway:
     _eve_interface: EveOnlineInterface
     _corporation_id: int
 

@@ -4,7 +4,8 @@ import eve_sde_tools
 from eve.domain import InventoryLocation
 
 
-class GetInventoryLocationGateway:
+#TODO (a.klimashevsky): extract implementation
+class InventoryLocationGateway:
     _cache_dir: str
 
     def __init__(self, cache_dir: str):

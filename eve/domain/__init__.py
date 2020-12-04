@@ -7,3 +7,6 @@ from eve.domain._asset_name import AssetName
 from eve.domain._assets_tree import AssetTreeItem
 
 from eve.domain._assets_tree import get_assets_tree
+
+from ._assets_service import AssetsService
+from ._assets_tree import AssetsTree

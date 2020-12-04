@@ -9,7 +9,8 @@ from eve.esi import StructureData
 from eve_esi_interface import EveOnlineInterface
 
 
-class GetForeignStructuresGateway:
+#TODO (a.klimashevsky): extract implementation
+class ForeignStructuresGateway:
     _eve_interface: EveOnlineInterface
 
     def __init__(self, eve_interface: EveOnlineInterface):
