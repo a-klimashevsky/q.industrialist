@@ -60,32 +60,17 @@ if __name__ == "__main__":
     argv_prms = console_app.get_argv_prms()
 
     cache_dir = argv_prms["workspace_cache_files_dir"]
+    offline_mode = argv_prms["offline_mode"]
+
     corporation_id = 98615601
 
-    # настройка Eve Online ESI Swagger interface
-    auth = esi.EveESIAuth(
-        '{}/auth_cache'.format(cache_dir),
-        debug=True)
-    client = esi.EveESIClient(
-        auth,
-        debug=False,
-        logger=True,
-        user_agent='Q.Industrialist v{ver}'.format(ver=__version__))
-    interface = esi.EveOnlineInterface(
-        client,
-        q_industrialist_settings.g_client_scope,
-        cache_dir='{}/esi_cache'.format(cache_dir),
-        offline_mode=argv_prms["offline_mode"])
-
-    eve_interface = interface
-
     app_container = ApplicationContainer()
+
     app_container.config.from_dict(
         {
             'cache_dir': cache_dir,
+            'offline_mode': offline_mode,
             'corporation_id': corporation_id,
-            'eve_interface': eve_interface,
-            'corporation_name': 'R Initiative 4'
         },
     )
     app_container.wire(modules=[sys.modules[__name__]])

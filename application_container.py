@@ -1,5 +1,6 @@
 from dependency_injector import containers, providers
 
+from esi_container import EsiContainer
 from eve.controllers.controllers_container import ControllersContainer
 from eve.domain import DomainContainer
 from eve.gateways.gateways_container import GatewaysContainer
@@ -8,10 +9,16 @@ from eve.gateways.gateways_container import GatewaysContainer
 class ApplicationContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
+    esi = providers.Container(
+        EsiContainer,
+        cache_dir=config.cache_dir,
+        offline_mode=config.offline_mode,
+    )
+
     gateway = providers.Container(
         GatewaysContainer,
         cache_dir=config.cache_dir,
-        eve_interface=config.eve_interface,
+        eve_interface=esi.interface,
         corporation_id=config.corporation_id,
     )
 
