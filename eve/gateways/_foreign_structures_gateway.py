@@ -13,11 +13,18 @@ from eve_esi_interface import EveOnlineInterface
 class ForeignStructuresGateway:
     _eve_interface: EveOnlineInterface
 
+    _cache = None
+
     def __init__(self, eve_interface: EveOnlineInterface):
         self._eve_interface = eve_interface
         pass
 
-    def structures(self, corp_assets_data: List[Asset], corporation_name) -> Dict[str, StructureData]:
+    def structures(self, corp_assets_data: List[Asset]) -> Dict[str, StructureData]:
+        if self._cache is None:
+            self._cache = self._structures(corp_assets_data)
+        return self._cache
+
+    def _structures(self, corp_assets_data: List[Asset]) -> Dict[str, StructureData]:
         foreign_structures_data: Dict[str, StructureData] = {}
         foreign_structures_ids = eve_esi_tools.get_foreign_structures_ids(corp_assets_data)
         foreign_structures_forbidden_ids = []
@@ -39,9 +46,6 @@ class ForeignStructuresGateway:
                 except:
                     print(sys.exc_info())
                     raise
-        # TODO: extract this log
-        if len(foreign_structures_forbidden_ids) > 0:
-            print("\n'{}' corporation has offices in {} forbidden stations : {}".format(corporation_name, len(
-                foreign_structures_forbidden_ids), foreign_structures_forbidden_ids))
+
         sys.stdout.flush()
         return foreign_structures_data

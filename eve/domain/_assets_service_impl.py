@@ -1,10 +1,10 @@
 from typing import Dict
 
-from eve.domain import AssetsService, AssetsTree, AssetTreeItem, get_assets_tree
+from eve.domain import CorpAssetsService, CorpAssets, AssetTreeItem, get_assets_tree
 from eve.gateways import CorpAssetsGateway, ForeignStructuresGateway, InventoryLocationGateway
 
 
-class AssetsServiceImpl(AssetsService):
+class CorpAssetsServiceImpl(CorpAssetsService):
     _corp_assets_gateway: CorpAssetsGateway
     _foreign_structures_gateway: ForeignStructuresGateway
     _inventory_locations_gateway: InventoryLocationGateway
@@ -21,17 +21,20 @@ class AssetsServiceImpl(AssetsService):
         self._foreign_structures_gateway = foreign_structures_gateway
         self._inventory_locations_gateway = inventory_locations_gateway
 
-    def assets_tree(self) -> Dict[str, AssetTreeItem]:
+    def all(self) -> CorpAssets:
         corp_assets_data = self._corp_assets_gateway.assets()
         foreign_structures_data = self._foreign_structures_gateway.structures(
-            corp_assets_data=corp_assets_data,
-            corporation_name=self._corporation_name
+            corp_assets_data=corp_assets_data
         )
         sde_inv_items = self._inventory_locations_gateway.get_inventory_locations()
-
-        return get_assets_tree(
+        (roots, tree) = get_assets_tree(
             corp_assets_data=corp_assets_data,
             foreign_structures_data=foreign_structures_data,
             sde_inv_items=sde_inv_items,
             virtual_hierarchy_by_corpsag=True
+        )
+
+        return CorpAssets(
+            roots=roots,
+            tree=tree,
         )

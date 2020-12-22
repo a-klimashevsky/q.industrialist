@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Dict
 
-from eve.domain import AssetsTree, AssetTreeItem
+from eve.domain import CorpAssets
 
 
-class AssetsService(ABC):
+class CorpAssetsService(ABC):
 
     @abstractmethod
-    def assets_tree(self) -> Dict[str, AssetTreeItem]:
+    def all(self) -> CorpAssets:
         pass

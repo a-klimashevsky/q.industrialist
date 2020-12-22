@@ -52,6 +52,8 @@ def __get_icon_src(icon_id, sde_icon_ids):
     else:
         return ""
 
+def dump_header(glf, header_name):
+    return __dump_header(glf, header_name)
 
 def __dump_header(glf, header_name):
     # см. https://github.com/gokulkrishh/awesome-meta-and-manifest
@@ -138,6 +140,8 @@ def __dump_header(glf, header_name):
             ' <script src="{bs_js}"></script>\n'.
             format(jq_js=__g_jquery_js_external, bs_js=__g_bootstrap_js_external))
 
+def dump_footer(glf, show_generated_datetime=True):
+    return __dump_footer(glf, show_generated_datetime)
 
 def __dump_footer(glf, show_generated_datetime=True):
     if show_generated_datetime:

@@ -5,16 +5,16 @@ from eve.domain import Asset, TypeIds
 from eve.esi.structure_data import StructureData
 from eve.domain import InventoryLocation
 
-class AssetsTree:
-    pass
 
 @dataclass
 class AssetTreeItem:
     item_id: int
+    quantity: int = 1
     type_id: int = None
     index: int = None
     location_id: str = None
     items: List[str] = None
+    location_flag: str = None
 
 
 def get_assets_tree(
@@ -22,7 +22,7 @@ def get_assets_tree(
         foreign_structures_data: Dict[str, StructureData],
         sde_inv_items: Dict[int, InventoryLocation],
         virtual_hierarchy_by_corpsag=False
-) -> Dict[str, AssetTreeItem]:
+) -> (List[int], Dict[str, AssetTreeItem]):
     """
     https://docs.esi.evetech.net/docs/asset_location_id
     https://forums-archive.eveonline.com/topic/520027/
@@ -44,7 +44,9 @@ def get_assets_tree(
                 type_id=type_id,
                 index=index,
                 items=[],
-                location_id=location_id
+                quantity=asset.quantity,
+                location_id=location_id,
+                location_flag=location_flag
             )
             asset_tree[str(item_id)] = tree_item
         else:
@@ -104,14 +106,14 @@ def get_assets_tree(
 
     # формируем корни дерева (станции и системы, с которых начинается общая иерархия)
     ass_keys = asset_tree.keys()
+    roots = []
     if len(ass_keys) > 0:
-        roots = []
         for k in ass_keys:
             root = _get_assets_tree_root(asset_tree, k)
             if 0 == roots.count(int(root)):
                 roots.append(int(root))  # составные root-ы типа 123456_CorpASG2 сюда не попадают, т.к. не корни
-        asset_tree["roots"] = roots
-    return asset_tree
+
+    return roots, asset_tree
 
 
 def _apend_items(asset_tree, corp_assets_data):
@@ -124,7 +126,7 @@ def _apend_items(asset_tree, corp_assets_data):
         if (asset.location_id != None):
             location = asset_tree.get(str(asset.location_id), None)
             if not location:
-                unknown_place.items.append(asset)
+                unknown_place.items.append(asset.item_id)
                 asset.location_id = unknown_place.item_id
             else:
                 location.items.append(asset.item_id)

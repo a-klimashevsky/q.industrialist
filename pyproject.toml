@@ -24,6 +24,7 @@ psycopg2-binary = "^2.8.6"
 memory-profiler = "^0.58.0"
 dataclasses-json = "^0.5.2"
 orjson = "^3.4.3"
+dependency-injector = "^4.5.4"
 
 [tool.poetry.dev-dependencies]
 pytest-pylint = "^0.18.0"

@@ -4,7 +4,7 @@ import eve_sde_tools
 from eve.domain import MarketGroup
 
 
-class GetMarketGroupsGateway:
+class MarketGroupsGateway:
     _cache_dir: str
 
     def __init__(self, cache_dir: str):

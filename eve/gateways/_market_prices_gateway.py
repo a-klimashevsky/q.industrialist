@@ -4,7 +4,7 @@ from eve.domain import MarketPrice
 from eve_esi_interface import EveOnlineInterface
 
 
-class GetMarketPricesGateway:
+class MarketPricesGateway:
     _eve_interface: EveOnlineInterface
 
     def __init__(self, eve_interface: EveOnlineInterface):

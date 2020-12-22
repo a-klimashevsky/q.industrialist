@@ -9,6 +9,7 @@ from eve_esi_interface import EveOnlineInterface
 class GetCorpAssetsNamesGateway:
     _eve_interface: EveOnlineInterface
     _corporation_id: int
+    _cache = None
 
     def __init__(self, eve_interface: EveOnlineInterface, corporation_id: int):
         self._eve_interface = eve_interface
@@ -16,6 +17,11 @@ class GetCorpAssetsNamesGateway:
         pass
 
     def asets_name(self, corp_assets_data: List[Asset]) -> List[AssetName]:
+        if self._cache is None:
+            self._cache = self._asets_name(corp_assets_data)
+        return self._cache
+
+    def _asets_name(self, corp_assets_data: List[Asset]) -> List[AssetName]:
         ids = eve_esi_tools.get_assets_named_ids(corp_assets_data)
 
         if len(ids) == 0: return []

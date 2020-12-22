@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import List
 
-from eve.viewmodels import AssetTreeItemViewModel
+from eve.viewmodels import CorpAssetsViewModel, AssetTreeItemViewModel
 
 
 class AssetsTreeController(ABC):
     @abstractmethod
-    def tree(self) -> AssetTreeItemViewModel:
+    def tree(self) -> List[AssetTreeItemViewModel]:
         pass
