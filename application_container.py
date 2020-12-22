@@ -20,7 +20,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
         GatewaysContainer,
         cache_dir=config.cache_dir,
         eve_interface=esi.interface,
-        corporation_id=config.corporation_id,
+        character_name=config.character_name,
     )
 
     domain = providers.Container(

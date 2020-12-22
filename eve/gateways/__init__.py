@@ -1,3 +1,4 @@
+from ._character_info_gateway import CharacterInfoGateway, CharacterInfoGatewayImpl
 from ._corp_assets_gateway import CorpAssetsGateway
 from ._inventory_locations_gateway import InventoryLocationGateway
 from ._market_prices_gateway import MarketPricesGateway
@@ -6,3 +7,4 @@ from ._markets_groups import MarketGroupsGateway
 from eve.gateways._get_corp_assets_names import GetCorpAssetsNamesGateway
 from ._foreign_structures_gateway import ForeignStructuresGateway
 from eve.gateways._get_inventory_location_names import GetInventoryLocationNamesGateway
+

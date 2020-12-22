@@ -49,8 +49,7 @@ if __name__ == "__main__":
 
     cache_dir = argv_prms["workspace_cache_files_dir"]
     offline_mode = argv_prms["offline_mode"]
-
-    corporation_id = 98615601
+    character_name = argv_prms["character_names"][0]
 
     app_container = ApplicationContainer()
 
@@ -58,7 +57,7 @@ if __name__ == "__main__":
         {
             'cache_dir': cache_dir,
             'offline_mode': offline_mode,
-            'corporation_id': corporation_id,
+            'character_name': character_name,
         },
     )
     app_container.wire(modules=[sys.modules[__name__]])

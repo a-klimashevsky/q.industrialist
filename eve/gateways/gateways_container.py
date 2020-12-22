@@ -2,15 +2,20 @@ from typing import Callable
 
 from dependency_injector import containers, providers
 
-
 from eve.gateways import TypeInfoGateway, MarketGroupsGateway, MarketPricesGateway, CorpAssetsGateway, \
-    ForeignStructuresGateway, InventoryLocationGateway, GetInventoryLocationNamesGateway, GetCorpAssetsNamesGateway
+    ForeignStructuresGateway, InventoryLocationGateway, GetInventoryLocationNamesGateway, GetCorpAssetsNamesGateway, \
+    CharacterInfoGatewayImpl
 
 
 class GatewaysContainer(containers.DeclarativeContainer):
     cache_dir = providers.Dependency()
     eve_interface = providers.Dependency()
-    corporation_id = providers.Dependency()
+    character_name = providers.Dependency()
+
+    character_info_gateway = providers.Singleton(
+        CharacterInfoGatewayImpl,
+        eve_interface=eve_interface,
+    )
 
     type_info_gateway: Callable[[], TypeInfoGateway] = providers.Singleton(
         TypeInfoGateway,
@@ -27,7 +32,8 @@ class GatewaysContainer(containers.DeclarativeContainer):
     corp_assets_gateway = providers.Singleton(
         CorpAssetsGateway,
         eve_interface=eve_interface,
-        corporation_id=corporation_id,
+        character_name=character_name,
+        character_info_gateway=character_info_gateway,
     )
     foreign_structures_gateway = providers.Singleton(
         ForeignStructuresGateway,
@@ -45,5 +51,6 @@ class GatewaysContainer(containers.DeclarativeContainer):
     corp_assets_names_gateway = providers.Singleton(
         GetCorpAssetsNamesGateway,
         eve_interface=eve_interface,
-        corporation_id=corporation_id
+        character_name=character_name,
+        character_info_gateway=character_info_gateway,
     )
