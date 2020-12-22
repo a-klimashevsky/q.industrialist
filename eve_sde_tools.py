@@ -7,20 +7,14 @@ run the following command from this directory as the root:
 import sys
 import os
 import getopt
-from typing import Dict
-
 import yaml
 import json
-import orjson
 from yaml import SafeLoader
 
 import pyfa_conversions as conversions
 
 
 # type=static_data_interface : unpacked SDE-yyyymmdd-TRANQUILITY.zip
-from app.domain import TypeInfo, MarketGroup
-
-
 def __get_yaml(type, sub_url, item):
     f_name = '{cwd}/{type}/{url}'.format(type=type, cwd=os.getcwd(), url=sub_url)
     item_to_search = "\n{}\n".format(item)
@@ -59,7 +53,7 @@ def read_converted(ws_dir, name):
     f_name_json = __get_converted_name(ws_dir, name)
     with open(f_name_json, 'r', encoding='utf8') as f:
         s = f.read()
-        json_data = (orjson.loads(s))
+        json_data = (json.loads(s))
         return json_data
 
 
@@ -154,12 +148,16 @@ def __rebuild_list2dict_by_key(ws_dir, name, key, val=None):
     del lst
 
 
-def get_item_name_by_type_id(type_ids: Dict[int, TypeInfo], type_id:int):
-    if not type_id in type_ids:
-        return str(type_id)
-
-    type_dict = type_ids[type_id]
-    return type_dict.name.get("en", str(type_id))
+def get_item_name_by_type_id(type_ids, type_id):
+    if not (str(type_id) in type_ids):
+        name = type_id
+    else:
+        type_dict = type_ids[str(type_id)]
+        if ("name" in type_dict) and ("en" in type_dict["name"]):
+            name = type_dict["name"]["en"]
+        else:
+            name = type_id
+    return name
 
 
 def convert_sde_type_ids(type_ids):
@@ -215,11 +213,13 @@ def get_market_group_name_by_id(sde_type_ids, group_id):
     return group_sid
 
 
-def get_market_group_by_type_id(sde_type_ids: Dict[int, TypeInfo], type_id:int):
-    if not (type_id in sde_type_ids):
+def get_market_group_by_type_id(sde_type_ids, type_id):
+    if not (str(type_id) in sde_type_ids):
         return None
-    type_dict = sde_type_ids[type_id]
-    return type_dict.market_group_id
+    type_dict = sde_type_ids[str(type_id)]
+    if "marketGroupID" in type_dict:
+        return type_dict["marketGroupID"]
+    return None
 
 
 def get_market_group_by_name(sde_market_groups, name):
@@ -257,10 +257,7 @@ def get_root_market_group_by_type_id(sde_type_ids, sde_market_groups, type_id):
     return groups_chain[0]
 
 
-def get_basis_market_group_by_type_id(
-        sde_type_ids: Dict[int, TypeInfo],
-        sde_market_groups: Dict[int, MarketGroup],
-        type_id):
+def get_basis_market_group_by_type_id(sde_type_ids, sde_market_groups, type_id):
     group_id = get_market_group_by_type_id(sde_type_ids, type_id)
     if group_id is None:
         return None
@@ -274,9 +271,9 @@ def get_basis_market_group_by_type_id(
                           1112,  # Subsystems (parent:955)
                          ]:
             return __group_id
-        __grp1 = sde_market_groups[__group_id]
-        if __grp1.parent_group_id:
-            __parent_group_id = __grp1.parent_group_id
+        __grp1 = sde_market_groups[str(__group_id)]
+        if "parentGroupID" in __grp1:
+            __parent_group_id = __grp1["parentGroupID"]
             # группа материалов для целей производства должна делиться на подгруппы (производство и заказы
             # в каждой из них решается индивидуально)
             if __parent_group_id in [533,  # Materials

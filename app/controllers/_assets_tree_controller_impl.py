@@ -7,6 +7,8 @@ from app.controllers import AssetsTreeController
 from app.domain import CorpAssetsService, AssetTreeItem, TypeInfoService, MarketGroup, MarketGroupService, \
     MarketPriceService
 from app.domain._location_info_service import LocationInfoService
+from app.domain.get_basis_market_group_by_type_id import get_basis_market_group_by_type_id
+from app.domain.get_item_name_by_type_id import get_item_name_by_type_id
 from app.viewmodels import AssetTreeItemViewModel, CorpAssetsViewModel
 
 
@@ -51,7 +53,7 @@ class AssetsTreeControllerImpl(AssetsTreeController):
         market_prices_data = self._market_price_service.all()
 
         icon_url = self._get_img_src(type_id=type_id, size=32)
-        name = eve_sde_tools.get_item_name_by_type_id(types, type_id)
+        name = get_item_name_by_type_id(types, type_id)
         market_price = market_prices_data.get(type_id, None)
 
         quantity = asset.quantity
@@ -94,7 +96,7 @@ class AssetsTreeControllerImpl(AssetsTreeController):
 
     @staticmethod
     def _get_market_group_name(types, market_groups, type_id):
-        group_id = eve_sde_tools.get_basis_market_group_by_type_id(types, market_groups, type_id)
+        group_id = get_basis_market_group_by_type_id(types, market_groups, type_id)
         if group_id == None:
             return None
         market_group_name = market_groups[group_id].name["en"]
