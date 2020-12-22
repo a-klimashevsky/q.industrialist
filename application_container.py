@@ -4,6 +4,7 @@ from esi_container import EsiContainer
 from eve.controllers.controllers_container import ControllersContainer
 from eve.domain import DomainContainer
 from eve.gateways.gateways_container import GatewaysContainer
+from eve.renderers.renderers_container import RenderersContainer
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
@@ -41,4 +42,10 @@ class ApplicationContainer(containers.DeclarativeContainer):
         market_groups_service=domain.market_group_service,
         market_price_service=domain.market_price_service,
         location_info_service=domain.location_info_service,
+    )
+
+    renderers = providers.Container(
+        RenderersContainer,
+        assets_tree_controller=controllers.assets_tree_controller,
+        cache_dir=config.cache_dir
     )

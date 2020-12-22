@@ -24,16 +24,10 @@ Requires application scopes:
 """
 import sys
 
-import requests
 from dependency_injector.wiring import inject, Provide
 
-import eve_esi_interface as esi
-
-import eve_sde_tools
 import console_app
-import q_industrialist_settings
-
-from __init__ import __version__
+import eve_sde_tools
 from application_container import ApplicationContainer
 from eve.controllers import AssetsTreeController
 from eve.renderers.assets_renderer import AssetsRenderer
@@ -41,17 +35,11 @@ from eve.renderers.assets_renderer import AssetsRenderer
 
 @inject
 def main(
-        assets_tree_controller: AssetsTreeController = Provide[
-            ApplicationContainer.controllers.assets_tree_controller
+        renderer: AssetsRenderer = Provide[
+            ApplicationContainer.renderers.assets_renderer
         ]
 ):
-    p = console_app.get_argv_prms()
-    c = p["workspace_cache_files_dir"]
-
-    renderer = AssetsRenderer()
-
-    renderer.render(assets_tree_controller.tree(), c)
-
+    renderer.render()
     # Вывод в лог уведомления, что всё завершилось (для отслеживания с помощью tail)
     print("\nDone")
 

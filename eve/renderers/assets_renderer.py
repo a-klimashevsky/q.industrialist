@@ -1,12 +1,19 @@
 from typing import List
 
+from eve.controllers import AssetsTreeController
 from render_html import dump_header, dump_footer
 from eve.viewmodels import AssetTreeItemViewModel
 
 
 class AssetsRenderer:
-    def render(self, assets: List[AssetTreeItemViewModel], ws_dir: str):
-        glf = open('{dir}/assets_tree.html'.format(dir=ws_dir), "wt+", encoding='utf8')
+
+    def __init__(self, cache_dir, controller: AssetsTreeController):
+        self._cache_dir = cache_dir
+        self._controller = controller
+
+    def render(self):
+        assets = self._controller.tree()
+        glf = open('{dir}/assets_tree.html'.format(dir=self._cache_dir), "wt+", encoding='utf8')
         try:
             dump_header(glf, "Corp Assets")
 
