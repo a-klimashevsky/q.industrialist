@@ -1,8 +1,8 @@
 import json
 from typing import List, Dict
 
-import eve_esi_tools
 from app.domain import AssetName, Asset
+from app.domain.get_assets_named_ids import get_assets_named_ids
 from app.gateways import CharacterInfoGateway
 from eve_esi_interface import EveOnlineInterface
 
@@ -29,7 +29,7 @@ class GetCorpAssetsNamesGateway:
         return self._cache
 
     def _asets_name(self, corp_assets_data: List[Asset]) -> List[AssetName]:
-        ids = eve_esi_tools.get_assets_named_ids(corp_assets_data)
+        ids = get_assets_named_ids(corp_assets_data)
 
         if len(ids) == 0: return []
         character_info = self._character_info_gateway.info(self._character_name)

@@ -1,11 +1,5 @@
 ﻿import json
 from pathlib import Path
-from typing import List, Dict
-
-import orjson
-
-from app.esi import StructureData
-from app.domain import Asset, InventoryLocation, AssetName
 
 
 def __get_blueprint_progress_status(corp_industry_jobs_data, blueprint_id):
@@ -109,15 +103,15 @@ def get_corp_ass_loc_data(corp_assets_data, containers_filter=None):
     return corp_ass_loc_data
 
 
-def get_assets_named_ids(corp_assets_data: List[Asset]):
+def get_assets_named_ids(corp_assets_data):
     ass_cont_ids = []
     for a in corp_assets_data:
-        if not a.is_singleton:
+        if not a["is_singleton"]:
             continue  # пропускаем экземпляры контейнеров, сложенные в стопки (у них нет уник. id и названий тоже не будет)
-        loc_flag = a.location_flag
+        loc_flag = str(a["location_flag"])
         if not (loc_flag[:-1] == "CorpSAG") and not (loc_flag == "Unlocked") and not (loc_flag == "AutoFit"):
             continue  # пропускаем дронов в дронбеях, патроны в карго, корабли в ангарах и т.п.
-        if a.type_id in [17363,   # Small Audit Log Secure Container
+        if a["type_id"] in [17363,   # Small Audit Log Secure Container
                             17364,   # Medium Audit Log Secure Container
                             17365,   # Large Audit Log Secure Container
                             17366,   # Station Container
@@ -142,36 +136,36 @@ def get_assets_named_ids(corp_assets_data: List[Asset]):
                             35835,   # Athanor
                             35836    # Tatara
                            ]:
-            if ass_cont_ids.count(a.item_id) == 0:
-                ass_cont_ids.append(a.item_id)
+            if ass_cont_ids.count(a["item_id"]) == 0:
+                ass_cont_ids.append(a["item_id"])
     return ass_cont_ids
 
 
-def get_foreign_structures_ids(corp_assets_data: List[Asset]):
+def get_foreign_structures_ids(corp_assets_data):
     foreign_structs_ids = []
     for a in corp_assets_data:
         # проверяем либо location_flag=OfficeFolder, либо type_id=27 (Office)
-        if a.type_id == 27:
+        if a["type_id"] == 27:
             # если будет найден Офис корпорации, то надо найти станцию
             # в том случае, если её нет в ассетах, то станция принадлежит другой
             # корпорации (пропускаем NPC-станции, с int32-кодами, и формируем
             # список из станций с int64-кодами)
-            station_id = a.location_id
+            station_id = int(a["location_id"])
             if station_id < 1000000000000:
                 continue
             found = False
             for _a in corp_assets_data:
-                if _a.item_id == station_id:
+                if _a["item_id"] == station_id:
                     found = True
                     break
             if not found:
                 if 0 == foreign_structs_ids.count(station_id):
                     foreign_structs_ids.append(station_id)
-        elif (a.location_flag == "CorpDeliveries") and (a.location_type == "item"):
+        elif (a["location_flag"] == "CorpDeliveries") and (a["location_type"] == "item"):
             # если будут найдены корпоративные delivery, то следует иметь в виду, что
             # всякое corp-delivery всегда находится в разделе "входящие" на станциях, так
             # что всякая локация corp-deliveries - это станции
-            location_id = a.location_id
+            location_id = int(a["location_id"])
             if location_id < 1000000000000:
                 continue
             if 0 == foreign_structs_ids.count(location_id):
@@ -292,7 +286,7 @@ def get_assets_tree(corp_assets_data, foreign_structures_data, sde_inv_items, vi
             ass_tree[str(solar_system_id)]["items"].append(int(station_id))
         else:
             ass_tree.update({str(solar_system_id): {"items": [int(station_id)], "type_id": 5}})  # 5 = Solar System
-    # дополняем дерево сведениям о расположении NPC-станций (данными из app sde)
+    # дополняем дерево сведениям о расположении NPC-станций (данными из eve sde)
     for station_id in stations:
         a = ass_tree[str(station_id)]
         if not ("type_id" in a):
@@ -312,9 +306,9 @@ def get_assets_tree(corp_assets_data, foreign_structures_data, sde_inv_items, vi
 
 def dump_debug_into_file(ws_dir, nm, data):
     f_name = '{dir}/debug/{nm}.json'.format(dir=ws_dir, nm=nm)
-    s = orjson.dumps(data, option=orjson.OPT_INDENT_2)
+    s = json.dumps(data, indent=1, sort_keys=False)
     Path('{dir}/debug'.format(dir=ws_dir)).mkdir(parents=True, exist_ok=True)
-    with open(f_name, 'wb+') as f:
+    with open(f_name, 'wt+', encoding='utf8') as f:
         try:
             f.write(s)
         finally:
@@ -328,38 +322,36 @@ def __represents_int(s):
         return True
     except ValueError:
         return False
-    except TypeError:
-        return False
 
 
 def get_assets_location_name(
-        location_id: str,
-        sde_inv_names: Dict[int,str],
-        sde_inv_items: Dict[int, InventoryLocation],
-        corp_ass_names_data: List[AssetName],
-        foreign_structures_data: Dict[str, StructureData]):
+        location_id,
+        sde_inv_names,
+        sde_inv_items,
+        corp_ass_names_data,
+        foreign_structures_data):
     region_id = None
     region_name = None
     loc_name = None
     foreign = False
     loc_is_not_virtual = __represents_int(location_id)
     if loc_is_not_virtual and (int(location_id) < 1000000000000):
-        if location_id in sde_inv_names:
-            loc_name = sde_inv_names[location_id]
-            if location_id in sde_inv_items:
-                root_item = sde_inv_items[location_id]
-                if root_item.type_id == 5:  # Solar System
+        if str(location_id) in sde_inv_names:
+            loc_name = sde_inv_names[str(location_id)]
+            if str(location_id) in sde_inv_items:
+                root_item = sde_inv_items[str(location_id)]
+                if root_item["typeID"] == 5:  # Solar System
                     # constellation_name = sde_inv_names[str(root_item["locationID"])]
-                    constellation_item = sde_inv_items[root_item.parent_location_id]  # Constellation
-                    region_id = constellation_item.parent_location_id
-                    region_name = sde_inv_names[region_id]
+                    constellation_item = sde_inv_items[str(root_item["locationID"])]  # Constellation
+                    region_id = constellation_item["locationID"]
+                    region_name = sde_inv_names[str(region_id)]
     else:
         if not loc_is_not_virtual and (location_id[:-1])[-7:] == "CorpSAG":
             loc_name = 'Corp Security Access Group {}'.format(location_id[-1:])
         else:
-            loc_name = next((n.name for n in corp_ass_names_data if n.item_id == location_id), None)
+            loc_name = next((n["name"] for n in corp_ass_names_data if n['item_id'] == location_id), None)
             if loc_name is None:
-                loc_name = next((foreign_structures_data[fs].name for fs in foreign_structures_data if int(fs) == location_id), None)
+                loc_name = next((foreign_structures_data[fs]["name"] for fs in foreign_structures_data if int(fs) == location_id), None)
                 foreign = False if loc_name is None else True
     return region_id, region_name, loc_name, foreign
 

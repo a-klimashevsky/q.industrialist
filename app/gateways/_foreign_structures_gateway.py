@@ -3,8 +3,8 @@ from typing import Dict, List
 
 import requests
 
-import eve_esi_tools
 from app.domain import Asset
+from app.domain.get_foreign_structures_ids import get_foreign_structures_ids
 from app.esi import StructureData
 from eve_esi_interface import EveOnlineInterface
 
@@ -26,7 +26,7 @@ class ForeignStructuresGateway:
 
     def _structures(self, corp_assets_data: List[Asset]) -> Dict[str, StructureData]:
         foreign_structures_data: Dict[str, StructureData] = {}
-        foreign_structures_ids = eve_esi_tools.get_foreign_structures_ids(corp_assets_data)
+        foreign_structures_ids = get_foreign_structures_ids(corp_assets_data)
         foreign_structures_forbidden_ids = []
         if len(foreign_structures_ids) > 0:
             # Requires: access token
