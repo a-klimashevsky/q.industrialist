@@ -29,8 +29,8 @@ from dependency_injector.wiring import inject, Provide
 import console_app
 import eve_sde_tools
 from application_container import ApplicationContainer
-from eve.controllers import AssetsTreeController
-from eve.renderers.assets_renderer import AssetsRenderer
+from app.controllers import AssetsTreeController
+from app.renderers.assets_renderer import AssetsRenderer
 
 
 @inject

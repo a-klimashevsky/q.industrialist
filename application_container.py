@@ -1,10 +1,10 @@
 from dependency_injector import containers, providers
 
 from esi_container import EsiContainer
-from eve.controllers.controllers_container import ControllersContainer
-from eve.domain import DomainContainer
-from eve.gateways.gateways_container import GatewaysContainer
-from eve.renderers.renderers_container import RenderersContainer
+from app.controllers.controllers_container import ControllersContainer
+from app.domain import DomainContainer
+from app.gateways.gateways_container import GatewaysContainer
+from app.renderers.renderers_container import RenderersContainer
 
 
 class ApplicationContainer(containers.DeclarativeContainer):

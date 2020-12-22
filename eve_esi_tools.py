@@ -4,8 +4,8 @@ from typing import List, Dict
 
 import orjson
 
-from eve.esi import StructureData
-from eve.domain import Asset, InventoryLocation, AssetName
+from app.esi import StructureData
+from app.domain import Asset, InventoryLocation, AssetName
 
 
 def __get_blueprint_progress_status(corp_industry_jobs_data, blueprint_id):
@@ -292,7 +292,7 @@ def get_assets_tree(corp_assets_data, foreign_structures_data, sde_inv_items, vi
             ass_tree[str(solar_system_id)]["items"].append(int(station_id))
         else:
             ass_tree.update({str(solar_system_id): {"items": [int(station_id)], "type_id": 5}})  # 5 = Solar System
-    # дополняем дерево сведениям о расположении NPC-станций (данными из eve sde)
+    # дополняем дерево сведениям о расположении NPC-станций (данными из app sde)
     for station_id in stations:
         a = ass_tree[str(station_id)]
         if not ("type_id" in a):

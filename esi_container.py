@@ -1,7 +1,6 @@
 from dependency_injector import containers, providers
 
 from create_esi_interface import create_esi_interface
-from eve import esi
 
 
 class EsiContainer(containers.DeclarativeContainer):

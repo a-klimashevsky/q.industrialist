@@ -18,7 +18,7 @@ import pyfa_conversions as conversions
 
 
 # type=static_data_interface : unpacked SDE-yyyymmdd-TRANQUILITY.zip
-from eve.domain import TypeInfo, MarketGroup
+from app.domain import TypeInfo, MarketGroup
 
 
 def __get_yaml(type, sub_url, item):
