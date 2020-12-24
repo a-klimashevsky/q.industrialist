@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
 from app.domain import LocationInfo
-from app.gateways import GetInventoryLocationNamesGateway, InventoryLocationGateway, GetCorpAssetsNamesGateway, \
-    CorpAssetsGateway, ForeignStructuresGateway
+from app.domain.gateways import InventoryLocationGateway, CorpAssetsNamesGateway, \
+    CorpAssetsGateway, ForeignStructuresGateway, InventoryLocationNamesGateway
 
 
 class LocationInfoService(ABC):
@@ -12,16 +12,16 @@ class LocationInfoService(ABC):
 
 
 class LocationInfoServiceImpl(LocationInfoService):
-    _inventory_names_gateway: GetInventoryLocationNamesGateway
+    _inventory_names_gateway: InventoryLocationNamesGateway
     _inventory_location_gateway: InventoryLocationGateway
-    _corp_assets_names_gateway: GetCorpAssetsNamesGateway
+    _corp_assets_names_gateway: CorpAssetsNamesGateway
     _corp_assets_gateway: CorpAssetsGateway
     _foreign_structures_gateway: ForeignStructuresGateway
 
     def __init__(self,
-                 inventory_names_gateway: GetInventoryLocationNamesGateway,
+                 inventory_names_gateway: InventoryLocationNamesGateway,
                  inventory_location_gateway: InventoryLocationGateway,
-                 corp_assets_names_gateway: GetCorpAssetsNamesGateway,
+                 corp_assets_names_gateway: CorpAssetsNamesGateway,
                  corp_assets_gateway: CorpAssetsGateway,
                  foreign_structures_gateway: ForeignStructuresGateway,
                  ):

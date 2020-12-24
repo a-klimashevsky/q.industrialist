@@ -1,10 +1,11 @@
 from typing import Dict, List, Any
 
 from app.domain import MarketPrice
+from app.domain.gateways import MarketPricesGateway
 from eve_esi_interface import EveOnlineInterface
 
 
-class MarketPricesGateway:
+class MarketPricesGatewayImpl(MarketPricesGateway):
     _eve_interface: EveOnlineInterface
 
     def __init__(self, eve_interface: EveOnlineInterface):

@@ -2,10 +2,10 @@ from typing import Dict, Any
 
 import eve_sde_tools
 from app.domain import InventoryLocation
+from app.domain.gateways import InventoryLocationGateway
 
 
-# TODO (a.klimashevsky): extract implementation
-class InventoryLocationGateway:
+class InventoryLocationGatewayImpl(InventoryLocationGateway):
     _cache_dir: str
 
     _cache = None

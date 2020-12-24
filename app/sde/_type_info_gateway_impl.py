@@ -2,9 +2,10 @@ from typing import Dict
 
 import eve_sde_tools
 from app.domain import TypeInfo
+from app.domain.gateways import TypeInfoGateway
 
 
-class TypeInfoGateway:
+class TypeInfoGatewayImpl(TypeInfoGateway):
     _cache_dir: str
 
     def __init__(self, cache_dir: str):

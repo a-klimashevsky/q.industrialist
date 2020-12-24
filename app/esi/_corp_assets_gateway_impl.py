@@ -1,18 +1,18 @@
 from typing import List
 
 from app.domain import Asset
-from app.gateways import CharacterInfoGateway
+from app.domain.gateways import CharacterInfoGateway, CorpAssetsGateway
 from eve_esi_interface import EveOnlineInterface
 
 
-# TODO (a.klimashevsky): extract implementation
-class CorpAssetsGateway:
+class CorpAssetsGatewayImpl(CorpAssetsGateway):
     _eve_interface: EveOnlineInterface
     _character_info_gateway: CharacterInfoGateway
     _character_name: str
     _cache = None
 
-    def __init__(self, eve_interface: EveOnlineInterface,
+    def __init__(self,
+                 eve_interface: EveOnlineInterface,
                  character_info_gateway: CharacterInfoGateway,
                  character_name: str,
                  ):

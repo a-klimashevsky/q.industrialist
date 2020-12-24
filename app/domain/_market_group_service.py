@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 from typing import Dict
 
 from app.domain import MarketGroup
-from app.gateways import MarketGroupsGateway
+from app.domain.gateways import MarketGroupsGateway
 
 
 class MarketGroupService(ABC):

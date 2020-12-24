@@ -1,13 +1,13 @@
 import json
 from typing import List, Dict
 
-from app.domain import AssetName, Asset
+from app.domain import Asset, AssetName
 from app.domain.get_assets_named_ids import get_assets_named_ids
-from app.gateways import CharacterInfoGateway
+from app.domain.gateways import CorpAssetsNamesGateway, CharacterInfoGateway
 from eve_esi_interface import EveOnlineInterface
 
 
-class GetCorpAssetsNamesGateway:
+class CorpAssetsNamesGatewayImpl(CorpAssetsNamesGateway):
     _eve_interface: EveOnlineInterface
     _character_info_gateway: CharacterInfoGateway
     _character_name: str

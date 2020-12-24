@@ -1,7 +1,5 @@
-from typing import Dict
-
-from app.domain import CorpAssetsService, CorpAssets, AssetTreeItem, get_assets_tree
-from app.gateways import CorpAssetsGateway, ForeignStructuresGateway, InventoryLocationGateway
+from app.domain import CorpAssetsService, CorpAssets, get_assets_tree
+from app.domain.gateways import CorpAssetsGateway, ForeignStructuresGateway, InventoryLocationGateway
 
 
 class CorpAssetsServiceImpl(CorpAssetsService):

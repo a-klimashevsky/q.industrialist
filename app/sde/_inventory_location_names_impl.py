@@ -1,9 +1,10 @@
 from typing import Dict
 
 import eve_sde_tools
+from app.domain.gateways import InventoryLocationNamesGateway
 
 
-class GetInventoryLocationNamesGateway:
+class InventoryLocationNamesGatewayImpl(InventoryLocationNamesGateway):
     _cache_dir: str
 
     _cache = None

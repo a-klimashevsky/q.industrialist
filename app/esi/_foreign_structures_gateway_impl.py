@@ -1,16 +1,16 @@
 import sys
-from typing import Dict, List
+from typing import List, Dict
 
 import requests
 
 from app.domain import Asset
 from app.domain.get_foreign_structures_ids import get_foreign_structures_ids
 from app.esi import StructureData
+from app.domain.gateways import ForeignStructuresGateway
 from eve_esi_interface import EveOnlineInterface
 
 
-#TODO (a.klimashevsky): extract implementation
-class ForeignStructuresGateway:
+class ForeignStructuresGatewayImpl(ForeignStructuresGateway):
     _eve_interface: EveOnlineInterface
 
     _cache = None

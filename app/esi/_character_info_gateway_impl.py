@@ -1,13 +1,6 @@
-from abc import abstractmethod, ABC
-
 from app.domain.character_info import CharacterInfo
+from app.domain.gateways import CharacterInfoGateway
 from eve_esi_interface import EveOnlineInterface
-
-
-class CharacterInfoGateway(ABC):
-    @abstractmethod
-    def info(self, name: str) -> CharacterInfo:
-        pass
 
 
 class CharacterInfoGatewayImpl(CharacterInfoGateway):

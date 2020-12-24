@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 from app.domain import MarketPrice
-from app.gateways import MarketPricesGateway
+from app.domain.gateways import MarketPricesGateway
 
 
 class MarketPriceService(ABC):

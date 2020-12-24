@@ -1,38 +1,38 @@
 from dependency_injector import containers, providers
 
-from esi_container import EsiContainer
+from app.esi.esi_container import EsiContainer
+from app.sde.sde_container import SdeContainer
 from app.controllers.controllers_container import ControllersContainer
 from app.domain import DomainContainer
-from app.gateways.gateways_container import GatewaysContainer
 from app.renderers.renderers_container import RenderersContainer
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
+    sde = providers.Container(
+        SdeContainer,
+        cache_dir=config.cache_dir,
+        character_name=config.character_name,
+    )
+
     esi = providers.Container(
         EsiContainer,
         cache_dir=config.cache_dir,
         offline_mode=config.offline_mode,
-    )
-
-    gateway = providers.Container(
-        GatewaysContainer,
-        cache_dir=config.cache_dir,
-        eve_interface=esi.interface,
         character_name=config.character_name,
     )
 
     domain = providers.Container(
         DomainContainer,
-        type_info_gateway=gateway.type_info_gateway,
-        market_group_gateway=gateway.market_group_gateway,
-        market_price_gateway=gateway.market_price_gateway,
-        corp_assets_gateway=gateway.corp_assets_gateway,
-        foreign_structures_gateway=gateway.foreign_structures_gateway,
-        inventory_locations_gateway=gateway.inventory_locations_gateway,
-        inventory_names_gateway=gateway.inventory_names_gateway,
-        corp_assets_names_gateway=gateway.corp_assets_names_gateway
+        type_info_gateway=sde.type_info_gateway,
+        market_group_gateway=sde.market_group_gateway,
+        market_price_gateway=esi.market_price_gateway,
+        corp_assets_gateway=esi.corp_assets_gateway,
+        foreign_structures_gateway=esi.foreign_structures_gateway,
+        inventory_locations_gateway=sde.inventory_locations_gateway,
+        inventory_names_gateway=sde.inventory_names_gateway,
+        corp_assets_names_gateway=esi.corp_assets_names_gateway
     )
 
     controllers = providers.Container(

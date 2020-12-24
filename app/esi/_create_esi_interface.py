@@ -3,7 +3,7 @@ import eve_esi_interface as esi
 from __init__ import __version__
 
 
-def create_esi_interface(cache_dir, offline_mode):
+def _create_esi_interface(cache_dir, offline_mode):
     auth_cache_dir = '{}/auth_cache'.format(cache_dir)
     auth = esi.EveESIAuth(
         cache_dir=auth_cache_dir,

@@ -2,9 +2,10 @@ from typing import Dict, Any
 
 import eve_sde_tools
 from app.domain import MarketGroup
+from app.domain.gateways import MarketGroupsGateway
 
 
-class MarketGroupsGateway:
+class MarketGroupsGatewayImpl(MarketGroupsGateway):
     _cache_dir: str
 
     def __init__(self, cache_dir: str):

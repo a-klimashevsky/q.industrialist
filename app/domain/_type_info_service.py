@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 from typing import Dict
 
 from app.domain import TypeInfo
-from app.gateways import TypeInfoGateway
+from app.domain.gateways import TypeInfoGateway
 
 
 class TypeInfoService(ABC):
