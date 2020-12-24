@@ -715,20 +715,20 @@ def main():  # rebuild .yaml files
     print("Rebuilding marketGroups.yaml file...")
     sys.stdout.flush()
     __rebuild(workspace_cache_files_dir, "fsd", "marketGroups", ["iconID", {"nameID": ["en"]}, "parentGroupID"])
-    
+
     print("Rebuilding iconIDs.yaml file...")
     sys.stdout.flush()
     __rebuild(workspace_cache_files_dir, "fsd", "iconIDs", ["iconFile"])
     print("Reindexing .converted_iconIDs.json file...")
     __rebuild_icons(workspace_cache_files_dir, "iconIDs")
-    
+
     print("Rebuilding invNames.yaml file...")
     sys.stdout.flush()
     __rebuild(workspace_cache_files_dir, "bsd", "invNames", ["itemID", "itemName"])
     print("Reindexing .converted_invNames.json file...")
     sys.stdout.flush()
     __rebuild_list2dict_by_key(workspace_cache_files_dir, "invNames", "itemID", "itemName")
-    
+
     print("Rebuilding invItems.yaml file...")
     sys.stdout.flush()
     __rebuild(workspace_cache_files_dir, "bsd", "invItems", ["itemID", "locationID", "typeID"])
