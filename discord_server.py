@@ -1,11 +1,11 @@
 import logging
 import sys
+from datetime import timedelta
 
-from app.renderers._sold_contracts_for_period_discord_renderer import SoldContractsForPeriodDiscordRenderer
+from app.renderers import SoldContractsForPeriodDiscordRenderer
 
 logger = logging.getLogger()
 
-from rx import operators as ops
 from dependency_injector.wiring import inject, Provide
 from discord import Webhook, RequestsWebhookAdapter
 from rx import Observable
@@ -24,7 +24,7 @@ def main(
             ApplicationContainer.renderers.sold_contracts_for_period_discord_renderer
         ],
 ):
-    webhook = Webhook.from_url(my_hook, adapter=RequestsWebhookAdapter())
+    webhook = Webhook.from_url(r4_hook, adapter=RequestsWebhookAdapter())
 
     source: Observable = sold_contracts_for_period_discord_renderer.render()
     source.subscribe(lambda x: webhook.send(x), lambda e: logger.error(str(e), exc_info=True))
@@ -44,6 +44,7 @@ if __name__ == "__main__":
             'cache_dir': cache_dir,
             'offline_mode': offline_mode,
             'character_name': character_name,
+            'sold_contracts_time_period': timedelta(days=1)
         },
     )
     app_container.wire(modules=[sys.modules[__name__]])

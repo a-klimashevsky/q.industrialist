@@ -6,6 +6,7 @@ from ._corp_assets_gateway_impl import CorpAssetsGatewayImpl
 from ._get_corporation_contracts_impl import GetCorporationContractsImpl
 from ._foreign_structures_gateway_impl import ForeignStructuresGatewayImpl
 from ._get_corp_assets_names_impl import CorpAssetsNamesGatewayImpl
+from ._get_corporation_info_impl import GetCorporationInfoImpl
 from ._market_prices_gateway_impl import MarketPricesGatewayImpl
 from ._create_esi_interface import _create_esi_interface
 from ._get_custom_structure_info_impl import GetCustomStructureInfoImpl
@@ -74,4 +75,10 @@ class EsiContainer(containers.DeclarativeContainer):
         GetCustomStructureInfoImpl,
         auth_user=auth_user,
         eve_interface=eve_interface,
+    )
+
+    get_corp_info = providers.Singleton(
+        GetCorporationInfoImpl,
+        eve_interface=eve_interface,
+        get_character_info=get_character_info,
     )

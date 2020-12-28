@@ -20,8 +20,11 @@ class DomainContainer(containers.DeclarativeContainer):
     inventory_names_gateway = providers.Dependency()
     corp_assets_names_gateway = providers.Dependency()
 
+    get_character_info = providers.Dependency()
     get_corp_contracts = providers.Dependency()
     get_custom_structure_info = providers.Dependency()
+
+    sold_contracts_time_period = providers.Dependency()
 
     type_info_service = providers.Singleton(
         TypeInfoServiceImpl,
@@ -57,8 +60,10 @@ class DomainContainer(containers.DeclarativeContainer):
 
     contracts_service = providers.Singleton(
         ContractServiceImpl,
+        get_character_info=get_character_info,
         get_corp_contracts=get_corp_contracts,
-        get_custom_structure_info=get_custom_structure_info
+        get_custom_structure_info=get_custom_structure_info,
+        time_period=sold_contracts_time_period
     )
 
     sold_contracts_for_period: Provider[SoldContractsForPeriodUseCase] = contracts_service

@@ -34,7 +34,9 @@ class ApplicationContainer(containers.DeclarativeContainer):
         inventory_names_gateway=sde.inventory_names_gateway,
         corp_assets_names_gateway=esi.corp_assets_names_gateway,
         get_corp_contracts=esi.get_corp_contracts,
-        get_custom_structure_info=esi.get_custom_structures_info
+        get_custom_structure_info=esi.get_custom_structures_info,
+        get_character_info=esi.get_character_info,
+        sold_contracts_time_period=config.sold_contracts_time_period
     )
 
     controllers = providers.Container(
@@ -44,11 +46,14 @@ class ApplicationContainer(containers.DeclarativeContainer):
         market_groups_service=domain.market_group_service,
         market_price_service=domain.market_price_service,
         location_info_service=domain.location_info_service,
+        sold_contracts_for_period=domain.sold_contracts_for_period,
+        get_corp_info=esi.get_corp_info,
+        time_period=config.sold_contracts_time_period,
     )
 
     renderers = providers.Container(
         RenderersContainer,
         assets_tree_controller=controllers.assets_tree_controller,
-        sold_contracts_for_period=domain.sold_contracts_for_period,
+        sold_contracts_for_period_controller=controllers.sold_contracts_for_period_controller,
         cache_dir=config.cache_dir
     )

@@ -11,3 +11,4 @@ from ._custom_structure_info_gateway import GetCustomStructureInfo
 
 from ._get_corporation_contracts import GetCorporationContracts
 from ._auth_user import AuthUser
+from .get_corporation_info import GetCorporationInfo

@@ -10,6 +10,7 @@ from ._contract_item import ContractItem
 from ._location_info import LocationInfo
 from ._character_info import CharacterInfo
 from ._auth import Auth
+from ._corporation_info import CorporationInfo
 from ._custom_structure_info import CustomStructureInfo
 
 from app.domain._assets_tree import get_assets_tree

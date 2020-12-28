@@ -8,7 +8,7 @@ class RenderersContainer(containers.DeclarativeContainer):
     cache_dir = providers.Dependency()
     assets_tree_controller = providers.Dependency()
 
-    sold_contracts_for_period = providers.Dependency()
+    sold_contracts_for_period_controller = providers.Dependency()
 
     assets_renderer = providers.Factory(
         AssetsRenderer,
@@ -18,5 +18,5 @@ class RenderersContainer(containers.DeclarativeContainer):
 
     sold_contracts_for_period_discord_renderer = providers.Factory(
         SoldContractsForPeriodDiscordRenderer,
-        sold_contracts_for_period=sold_contracts_for_period,
+        controller=sold_contracts_for_period_controller,
     )
