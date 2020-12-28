@@ -1,4 +1,4 @@
-from app.domain.character_info import CharacterInfo
+from app.domain import CharacterInfo
 from app.domain.gateways import CharacterInfoGateway
 from eve_esi_interface import EveOnlineInterface
 

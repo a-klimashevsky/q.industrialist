@@ -32,7 +32,9 @@ class ApplicationContainer(containers.DeclarativeContainer):
         foreign_structures_gateway=esi.foreign_structures_gateway,
         inventory_locations_gateway=sde.inventory_locations_gateway,
         inventory_names_gateway=sde.inventory_names_gateway,
-        corp_assets_names_gateway=esi.corp_assets_names_gateway
+        corp_assets_names_gateway=esi.corp_assets_names_gateway,
+        get_corp_contracts=esi.get_corp_contracts,
+        get_custom_structure_info=esi.get_custom_structures_info
     )
 
     controllers = providers.Container(
@@ -47,5 +49,6 @@ class ApplicationContainer(containers.DeclarativeContainer):
     renderers = providers.Container(
         RenderersContainer,
         assets_tree_controller=controllers.assets_tree_controller,
+        sold_contracts_for_period=domain.sold_contracts_for_period,
         cache_dir=config.cache_dir
     )

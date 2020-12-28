@@ -2,8 +2,9 @@ from dependency_injector import containers, providers
 from dependency_injector.providers import Provider
 
 from app.domain import TypeInfoService, TypeInfoServiceImpl, MarketGroupService, MarketGroupServiceImpl, \
-    MarketPriceServiceImpl
+    MarketPriceServiceImpl, SoldContractsForPeriodUseCase
 from app.domain._assets_service_impl import CorpAssetsServiceImpl
+from app.domain._contracts_service_impl import ContractServiceImpl
 from app.domain._location_info_service import LocationInfoServiceImpl
 
 
@@ -18,6 +19,9 @@ class DomainContainer(containers.DeclarativeContainer):
     inventory_locations_gateway = providers.Dependency()
     inventory_names_gateway = providers.Dependency()
     corp_assets_names_gateway = providers.Dependency()
+
+    get_corp_contracts = providers.Dependency()
+    get_custom_structure_info = providers.Dependency()
 
     type_info_service = providers.Singleton(
         TypeInfoServiceImpl,
@@ -50,3 +54,11 @@ class DomainContainer(containers.DeclarativeContainer):
         corp_assets_gateway=corp_assets_gateway,
         foreign_structures_gateway=foreign_structures_gateway,
     )
+
+    contracts_service = providers.Singleton(
+        ContractServiceImpl,
+        get_corp_contracts=get_corp_contracts,
+        get_custom_structure_info=get_custom_structure_info
+    )
+
+    sold_contracts_for_period: Provider[SoldContractsForPeriodUseCase] = contracts_service

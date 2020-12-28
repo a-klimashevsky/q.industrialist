@@ -7,3 +7,7 @@ from ._markets_groups import MarketGroupsGateway
 from ._corp_assets_names import CorpAssetsNamesGateway
 from ._foreign_structures_gateway import ForeignStructuresGateway
 from ._inventory_location_names_gateway import InventoryLocationNamesGateway
+from ._custom_structure_info_gateway import GetCustomStructureInfo
+
+from ._get_corporation_contracts import GetCorporationContracts
+from ._auth_user import AuthUser

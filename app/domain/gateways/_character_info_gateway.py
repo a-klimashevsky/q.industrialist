@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 
-from app.domain.character_info import CharacterInfo
+from app.domain._character_info import CharacterInfo
 
 
 class CharacterInfoGateway(ABC):
